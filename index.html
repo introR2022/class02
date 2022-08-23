@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Visualizando - ggplot2</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="  Renata Oliveira" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view/tile-view.js"></script>
+    <script type="application/json" id="xaringanExtra-editable-docid">{"id":"xa9d58ff67b4437b9eb8fefde4afed67","expires":1}</script>
+    <script src="libs/himalaya/himalaya.js"></script>
+    <script src="libs/js-cookie/js.cookie.js"></script>
+    <link href="libs/editable/editable.css" rel="stylesheet" />
+    <script src="libs/editable/editable.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"<i class=\"fa fa-clipboard\"><\/i>","success":"<i class=\"fa fa-check\" style=\"color: #90BE6D\"><\/i>","error":"<i class=\"fa fa-times-circle\" style=\"color: #F94144\"><\/i>"})</script>
+    <script src="libs/xaringanExtra_fit-screen/fit-screen.js"></script>
+    <link href="libs/xaringanExtra-extra-styles/xaringanExtra-extra-styles.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="slides.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Visualizando - ggplot2
+]
+.author[
+### <br></br> Renata Oliveira
+]
+
+---
+
+
+
+
+
+layout: true
+  
+&lt;div class="my-footer"&gt;
+&lt;span&gt;
+&lt;a href="https://places.education/" target="_blank"&gt;https://places.education/&lt;/a&gt;
+&lt;/span&gt;
+&lt;/div&gt; 
+
+---
+
+
+
+
+
+class: center, middle
+
+# Retrospecto
+
+---
+
+# Instalação de pacotes para o encontro de hoje!
+
+#### Pelo github
+
+```r
+devtools::install_github("rstudio-education/dsbox")
+devtools::install_github("gadenbuie/xaringanExtra")
+```
+
+#### Outros
+
+```r
+install.packages("remedy")
+install.packages("tidyverse")
+install.packages("palmerpenguins")
+install_packages("flexdashboard", "xaringan", "xaringanthemer")
+```
+
+---
+
+## Modelo conceitual da análise de dados
+
+![Modelo de Data Science](https://retaoliveira.github.io/relements/figures/dataR.png)
+---
+
+## Estrutura da linguagem R 
+
+- As funções são (na maioria das vezes) verbos, seguidos pelo objeto a que serão aplicados entre parênteses:
+
+
+```r
+do_this(to_this)
+do_that(to_this, to_that, with_those)
+```
+
+--
+
+- Os pacotes são instalados com a função `install.packages` e carregados com a função `library`, uma vez por sessão:
+
+
+```r
+install.packages("package_name")
+library(package_name)
+```
+
+---
+
+## Funções essenciais  (continuação)
+
+- apresenta as seis primeiras linhas do banco de dados
+
+```r
+head(mtcars)
+```
+
+```
+##                    mpg cyl disp  hp drat    wt  qsec vs am gear
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3
+##                   carb
+## Mazda RX4            4
+## Mazda RX4 Wag        4
+## Datsun 710           1
+## Hornet 4 Drive       1
+## Hornet Sportabout    2
+## Valiant              1
+```
+
+---
+
+- mostra os tipos de variáveis e a estrutura do dado
+
+```r
+str(mtcars)
+```
+
+```
+## 'data.frame':	32 obs. of  11 variables:
+##  $ mpg : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+##  $ cyl : num  6 6 4 6 8 6 8 4 4 6 ...
+##  $ disp: num  160 160 108 258 360 ...
+##  $ hp  : num  110 110 93 110 175 105 245 62 95 123 ...
+##  $ drat: num  3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
+##  $ wt  : num  2.62 2.88 2.32 3.21 3.44 ...
+##  $ qsec: num  16.5 17 18.6 19.4 17 ...
+##  $ vs  : num  0 0 1 1 0 1 0 1 1 1 ...
+##  $ am  : num  1 1 1 0 0 0 0 0 0 0 ...
+##  $ gear: num  4 4 4 3 3 3 3 4 4 4 ...
+##  $ carb: num  4 4 1 1 2 1 4 2 2 4 ...
+```
+
+---
+
+- mostra a classe da base de dados
+
+
+```r
+class(mtcars)
+```
+
+```
+## [1] "data.frame"
+```
+
+--
+
+- mostra a dimensão do objeto
+
+
+```r
+dim(mtcars)
+```
+
+```
+## [1] 32 11
+```
+
+--
+
+- mostra os nomes das variáveis (colunas)
+
+
+```r
+names(mtcars)
+```
+
+```
+##  [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"  
+##  [9] "am"   "gear" "carb"
+```
+
+---
+
+- A função `c()` permite a construção de vetores por meio alocação de valores em posições distintas de vetores.  
+
+
+```r
+v1 &lt;- c("pato", "sapo", "pato", "gato", "pato")
+```
+
+--
+- As colunas (variáveis) em dataframes são acessadas com `$`:
+
+
+```r
+dataframe$var_name
+```
+
+---
+
+## Tipos de dados
+
+&lt;img src="img/continuous_discrete.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Tipos de dados
+
+&lt;img src="img/nominal_ordinal_binary.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Tipos de dados
+
+- Os tipos de dados mais comuns são `character`, `numeric`, `factor`e `logical`.
+
+Character
+
+```r
+character &lt;- "arroz"
+class(character)
+```
+
+```
+## [1] "character"
+```
+
+Numeric
+
+```r
+numeric &lt;- 7
+class(numeric)
+```
+
+```
+## [1] "numeric"
+```
+
+---
+
+## Tipos de dados
+
+Factor
+
+```r
+factor &lt;- as.factor(c("pato", "gato", "rato", "gato", "pato"))
+class(factor)
+```
+
+```
+## [1] "factor"
+```
+
+```r
+levels(factor)
+```
+
+```
+## [1] "gato" "pato" "rato"
+```
+
+---
+
+## Tipos de dados
+
+Logical
+
+```r
+logical &lt;- as.logical(c(0,1,1,0))
+class(logical)
+```
+
+```
+## [1] "logical"
+```
+
+---
+
+## Tipos de classes de objetos no R
+
+- As classes de organização dos dados mais comuns são `vector`, `list`, `matrix` e `dataframe`.
+
+.question[
+Um vetor é uma seqüência de elementos de dados do mesmo tipo básico. Os elementos em um vetor são oficialmente chamados de componentes. No entanto, nós os chamaremos apenas de elementos e assumiremos que cada elemento ocupa uma posição no vetor.
+]
+
+---
+
+## Tipos de classes de objetos no R
+
+#### Índice em vetores:
+
+
+```r
+s &lt;- c("aa", "bb", "cc", "dd", "ee") 
+s[3] 
+```
+
+```
+## [1] "cc"
+```
+
+```r
+s[-3]
+```
+
+```
+## [1] "aa" "bb" "dd" "ee"
+```
+
+```r
+s[10]
+```
+
+```
+## [1] NA
+```
+
+---
+
+## Tipos de classes de objetos no R
+
+.question[
+Uma matriz é uma coleção de elementos de dados dispostos em um layout bidimensional retangular. A seguir, um exemplo de uma matriz com 2 filas e 3 colunas.]
+
+---
+
+## Tipos de classes de objetos no R
+
+
+```r
+A = matrix(c(2, 4, 3, 1, 5, 7), # the data elements 
+     nrow=2,                    # number of rows 
+     ncol=3,                    # number of columns 
+     byrow = TRUE)              # fill matrix by rows 
+A
+```
+
+```
+##      [,1] [,2] [,3]
+## [1,]    2    4    3
+## [2,]    1    5    7
+```
+
+```r
+A[2, 3]
+```
+
+```
+## [1] 7
+```
+
+---
+
+## Tipos de classes de objetos no R
+
+.question[
+Uma lista é um vetor genérico que contém diferentes tipos de objetos.
+]
+
+
+```r
+n &lt;- c(2, 3, 5) 
+s &lt;- c("aa", "bb", "cc", "dd", "ee") 
+x &lt;- list(n, s, 3)   # x contains copies of n, s, b
+x
+```
+
+```
+## [[1]]
+## [1] 2 3 5
+## 
+## [[2]]
+## [1] "aa" "bb" "cc" "dd" "ee"
+## 
+## [[3]]
+## [1] 3
+```
+
+---
+
+## Tipos de classes de objetos no R
+
+
+```r
+slice &lt;- x[2]
+slice
+```
+
+```
+## [[1]]
+## [1] "aa" "bb" "cc" "dd" "ee"
+```
+
+```r
+x[[2]] # member - can be modified
+```
+
+```
+## [1] "aa" "bb" "cc" "dd" "ee"
+```
+
+---
+
+## Tipos de classes de objetos no R
+
+.question[
+Um `dataframe` é usado para armazenar tabelas de dados. É uma lista de vetores de igual comprimento. Por exemplo, a seguinte variável `df` é uma `dataframe` contendo três vetores n, s, b.
+]
+
+
+```r
+n &lt;- c(2, 3, 5) 
+s &lt;- c("aa", "bb", "cc") 
+b &lt;- c(TRUE, FALSE, TRUE) 
+df &lt;- data.frame(n, s, b)       # df is a data frame
+df
+```
+
+```
+##   n  s     b
+## 1 2 aa  TRUE
+## 2 3 bb FALSE
+## 3 5 cc  TRUE
+```
+
+
+---
+
+## RMarkdown
+
+&lt;img src="img/render.png" width="100%" style="display: block; margin: auto;" /&gt;
+.footnote[
+Alison Hill [Teaching in Production](https://rstudio-education.github.io/teaching-in-production/slides/index.html#1)
+]
+
+
+---
+
+class: center, middle
+
+# Atividades extra de RMarkdown
+
+---
+
+### Fazendo uma apresentação no R!
+
+1. Instale os pacotes install.packages(c("xaringan", "xaringanExtra", "xaringanthemer"))
+2. Gere um arquivo R markdown do tipo Ninja Xaringan Themer. 
+3. `knit` o documento. 
+4. Visite o site [color-hex](https://www.color-hex.com/) e altere o padrão de cores da apresentação.
+
+---
+
+### Outra exploração (individualmente)
+
+1. Instale o package `flexdashboard` (install.packages("flexdashboard"))
+2. Gere um documento desse tipo no RStudio.
+3. Inclua dados e representações simples. Pode utilizar o `mtcars` e as funções `plot()`, `hist()` e `boxplot()`   
+4. Gere um `summary()` de algum dos vetores que compõe o dataframe. 
+
+---
+class: middle
+
+# O que é um conjunto de dados?
+
+---
+
+## Terminologia
+
+- Cada linha é uma **observação**
+- Cada coluna é uma **variável**
+
+
+```r
+library(tidyverse)
+starwars
+```
+
+```
+## # A tibble: 87 × 14
+##   name  height  mass hair_…¹ skin_…² eye_c…³ birth…⁴ sex   gender
+##   &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+## 1 Luke…    172    77 blond   fair    blue       19   male  mascu…
+## 2 C-3PO    167    75 &lt;NA&gt;    gold    yellow    112   none  mascu…
+## 3 R2-D2     96    32 &lt;NA&gt;    white,… red        33   none  mascu…
+## 4 Dart…    202   136 none    white   yellow     41.9 male  mascu…
+## 5 Leia…    150    49 brown   light   brown      19   fema… femin…
+## 6 Owen…    178   120 brown,… light   blue       52   male  mascu…
+## # … with 81 more rows, 5 more variables: homeworld &lt;chr&gt;,
+## #   species &lt;chr&gt;, films &lt;list&gt;, vehicles &lt;list&gt;,
+## #   starships &lt;list&gt;, and abbreviated variable names
+## #   ¹​hair_color, ²​skin_color, ³​eye_color, ⁴​birth_year
+```
+
+---
+
+## Luke Skywalker
+
+![luke-skywalker](img/luke-skywalker.png)
+
+## O que está no conjunto de dados StarWars??
+
+Dê uma olhada `glimpse` nos dados:
+
+
+```r
+glimpse(starwars)
+```
+
+```
+## Rows: 87
+## Columns: 14
+## $ name       &lt;chr&gt; "Luke Skywalker", "C-3PO", "R2-D2", "Darth V…
+## $ height     &lt;int&gt; 172, 167, 96, 202, 150, 178, 165, 97, 183, 1…
+## $ mass       &lt;dbl&gt; 77.0, 75.0, 32.0, 136.0, 49.0, 120.0, 75.0, …
+## $ hair_color &lt;chr&gt; "blond", NA, NA, "none", "brown", "brown, gr…
+## $ skin_color &lt;chr&gt; "fair", "gold", "white, blue", "white", "lig…
+## $ eye_color  &lt;chr&gt; "blue", "yellow", "red", "yellow", "brown", …
+## $ birth_year &lt;dbl&gt; 19.0, 112.0, 33.0, 41.9, 19.0, 52.0, 47.0, N…
+## $ sex        &lt;chr&gt; "male", "none", "none", "male", "female", "m…
+## $ gender     &lt;chr&gt; "masculine", "masculine", "masculine", "masc…
+## $ homeworld  &lt;chr&gt; "Tatooine", "Tatooine", "Naboo", "Tatooine",…
+## $ species    &lt;chr&gt; "Human", "Droid", "Droid", "Human", "Human",…
+## $ films      &lt;list&gt; &lt;"The Empire Strikes Back", "Revenge of the…
+## $ vehicles   &lt;list&gt; &lt;"Snowspeeder", "Imperial Speeder Bike"&gt;, &lt;…
+## $ starships  &lt;list&gt; &lt;"X-wing", "Imperial shuttle"&gt;, &lt;&gt;, &lt;&gt;, "TI…
+```
+
+---
+
+.midi[
+.question[
+Quantas linhas e colunas tem este conjunto de dados?   
+O que representa cada linha?   
+O que representa cada coluna?   
+]
+]
+
+
+```r
+?starwars
+```
+
+&lt;img src="img/starwars-help.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+.question[
+Quantas linhas e colunas tem este conjunto de dados?
+]
+
+.pull-left[
+
+```r
+nrow(starwars) # number of rows
+```
+
+```
+## [1] 87
+```
+
+```r
+ncol(starwars) # number of columns
+```
+
+```
+## [1] 14
+```
+
+```r
+dim(starwars)  # dimensions (row column)
+```
+
+```
+## [1] 87 14
+```
+]
+
+---
+
+class: middle
+
+# Análise exploratória de dados
+
+---
+
+## O que é AED?
+
+- A análise exploratória de dados (AED) é uma abordagem para analisar conjuntos de dados visando resumir suas principais características
+- Muitas vezes, é possível de maneira visual - é nisto que nos vamos concentrar primeiro
+- Mas também podemos calcular estatísticas resumidas e realizar discussões/manipulação/transformação de dados nesta (ou antes) fase da análise -- é nisto que nos concentraremos a seguir
+
+---
+
+## Massa vs. altura
+
+.midi[
+.question[ 
+Como você descreveria a relação entre massa e altura dos personagens de Starwars?   
+Que outras variáveis nos ajudariam a entender as observações nos dados que não seguem a tendência geral?   
+Quem é o personagem não tão alto mas realmente rechonchudo?   
+]
+]
+--
+
+&lt;img src="index_files/figure-html/unnamed-chunk-30-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Jabba!
+
+&lt;img src="img/jabbaplot.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle
+
+# Data visualization
+
+---
+
+## Visualização de dados
+
+&gt; *"The simple graph has brought more information to the data analyst's mind than any other device." --- John Tukey*
+- A visualização de dados é a criação e estudo da representação visual dos dados
+- Muitas ferramentas para visualização de dados -- R é uma delas
+- Muitas abordagens/sistemas dentro de R para fazer visualizações de dados -- **ggplot2*** é uma delas, e é isso que vamos usar
+
+---
+
+## ggplot2 `\(\in\)` tidyverse
+
+.pull-left[
+&lt;img src="img/ggplot2-part-of-tidyverse.png" width="80%" style="display: block; margin: auto;" /&gt;
+] 
+.pull-right[ 
+- O ggplot2*** é o pacote de visualização de dados do tidyverse 
+- ggplot2 em "ggplot2" significa Gramática Gráfica 
+- Inspirado no livro **Gramática de Gráficos** de Leland Wilkinson
+]
+
+---
+
+## Gramática dos gráficos
+
+.pull-left-narrow[
+Uma gramática de gráficos é uma ferramenta que nos permite descrever de forma concisa os componentes de um gráfico
+]
+.pull-right-wide[
+&lt;img src="img/grammar-of-graphics.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.footnote[ Source: [BloggoType](http://bloggotype.blogspot.com/2016/08/holiday-notes2-grammar-of-graphics.html)]
+
+---
+
+## Massa vs. altura
+
+
+```r
+ggplot(data = starwars, mapping = aes(x = height, y = mass)) +
+  geom_point() +
+  labs(title = "Mass vs. height of Starwars characters",
+       x = "Height (cm)", y = "Weight (kg)")
+```
+
+```
+## Warning: Removed 28 rows containing missing values (geom_point).
+```
+
+&lt;img src="index_files/figure-html/mass-height-1.png" width="40%" style="display: block; margin: auto;" /&gt;
+
+---
+
+.question[ 
+- Quais são as funções que fazem a plotagem?
+- Qual é o conjunto de dados que está sendo plotado?
+- Quais variáveis mapeiam quais características (estética) da plotagem?
+- O que significa o aviso?&lt;sup&gt;+&lt;/sup&gt;
+]
+
+
+```r
+ggplot(data = starwars, mapping = aes(x = height, y = mass)) +
+  geom_point() +
+  labs(title = "Mass vs. height of Starwars characters",
+       x = "Height (cm)", y = "Weight (kg)")
+```
+
+```
+## Warning: Removed 28 rows containing missing values (geom_point).
+```
+
+.footnote[
+&lt;sup&gt;+&lt;/sup&gt;Suprimindo aviso para os slides subseqüentes para economizar espaço
+]
+
+
+---
+
+## Hello ggplot2!
+
+- ggplot() é a função principal no ggplot2
+- As parcelas são construídas em camadas
+- A estrutura do código para as parcelas pode ser resumida como
+
+
+```r
+ggplot(data = [dataset], 
+       mapping = aes(x = [x-variable], y = [y-variable])) +
+   geom_xxx() +
+   other options
+```
+
+- O pacote ggplot2 vem com o pacote tidyverse
+
+
+```r
+library(tidyverse)
+```
+
+- Para ajuda com ggplot2, veja [ggplot2.tidyverse.org](http://ggplot2.tidyverse.org/)
+
+---
+
+class: middle
+
+# Por que visualizamos?
+
+---
+
+## O quarteto de Anscombe
+
+
+
+.small[
+.pull-left[
+
+```
+##    set  x     y
+## 1    I 10  8.04
+## 2    I  8  6.95
+## 3    I 13  7.58
+## 4    I  9  8.81
+## 5    I 11  8.33
+## 6    I 14  9.96
+## 7    I  6  7.24
+## 8    I  4  4.26
+## 9    I 12 10.84
+## 10   I  7  4.82
+## 11   I  5  5.68
+## 12  II 10  9.14
+## 13  II  8  8.14
+## 14  II 13  8.74
+## 15  II  9  8.77
+## 16  II 11  9.26
+## 17  II 14  8.10
+## 18  II  6  6.13
+## 19  II  4  3.10
+## 20  II 12  9.13
+## 21  II  7  7.26
+## 22  II  5  4.74
+```
+] 
+]
+
+.small[
+.pull-right[
+
+```
+##    set  x     y
+## 23 III 10  7.46
+## 24 III  8  6.77
+## 25 III 13 12.74
+## 26 III  9  7.11
+## 27 III 11  7.81
+## 28 III 14  8.84
+## 29 III  6  6.08
+## 30 III  4  5.39
+## 31 III 12  8.15
+## 32 III  7  6.42
+## 33 III  5  5.73
+## 34  IV  8  6.58
+## 35  IV  8  5.76
+## 36  IV  8  7.71
+## 37  IV  8  8.84
+## 38  IV  8  8.47
+## 39  IV  8  7.04
+## 40  IV  8  5.25
+## 41  IV 19 12.50
+## 42  IV  8  5.56
+## 43  IV  8  7.91
+## 44  IV  8  6.89
+```
+]
+]
+
+---
+
+## Resumindo o quarteto da Anscombe
+
+
+```r
+quartet %&gt;%
+  group_by(set) %&gt;%
+  summarise(
+    mean_x = mean(x), 
+    mean_y = mean(y),
+    sd_x = sd(x),
+    sd_y = sd(y),
+    r = cor(x, y)
+  )
+```
+
+```
+## # A tibble: 4 × 6
+##   set   mean_x mean_y  sd_x  sd_y     r
+##   &lt;fct&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 I          9   7.50  3.32  2.03 0.816
+## 2 II         9   7.50  3.32  2.03 0.816
+## 3 III        9   7.5   3.32  2.03 0.816
+## 4 IV         9   7.50  3.32  2.03 0.817
+```
+
+---
+
+## Visualizando o quarteto de Anscombe
+
+&lt;img src="index_files/figure-html/quartet-plot-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Idade no primeiro beijo
+
+.question[ 
+Você vê algo fora do comum?
+]
+
+&lt;img src="index_files/figure-html/unnamed-chunk-37-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Visitas ao Facebook
+
+.question[ 
+Como as pessoas estão relatando valores mais baixos versus valores mais altos de visitas da FB?
+]
+
+&lt;img src="index_files/figure-html/unnamed-chunk-38-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle
+
+# ggplot2 ❤️ 🐧
+
+---
+
+## ggplot2 `\(\in\)` tidyverse
+
+.pull-left[
+&lt;img src="img/ggplot2-part-of-tidyverse.png" width="80%" style="display: block; margin: auto;" /&gt;
+] 
+.pull-right[ 
+- **ggplot2** is tidyverse's data visualization package 
+- Structure of the code for plots can be summarized as
+
+
+```r
+ggplot(data = [dataset], 
+       mapping = aes(x = [x-variable], 
+                     y = [y-variable])) +
+   geom_xxx() +
+   other options
+```
+]
+
+---
+
+## Data: Palmer Penguins
+
+Medidas para espécies de pinguins, ilha no Arquipélago de Palmer, tamanho (comprimento da barbatana, massa corporal, dimensões do bico) e sexo.
+
+.pull-left-narrow[
+&lt;img src="img/penguins.png" width="80%" style="display: block; margin: auto;" /&gt;
+]
+.pull-right-wide[
+
+```r
+library(palmerpenguins)
+glimpse(penguins)
+```
+
+```
+## Rows: 344
+## Columns: 8
+## $ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adeli…
+## $ island            &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torg…
+## $ bill_length_mm    &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.…
+## $ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.…
+## $ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195…
+## $ body_mass_g       &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 362…
+## $ sex               &lt;fct&gt; male, female, female, NA, female, mal…
+## $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2…
+```
+]
+
+---
+
+.panelset[
+.panel[.panel-name[Plot]
+&lt;img src="index_files/figure-html/unnamed-chunk-43-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[Código]
+
+
+```r
+ggplot(data = penguins, 
+       mapping = aes(x = bill_depth_mm, y = bill_length_mm,
+                     colour = species)) +
+  geom_point() +
+  labs(title = "Largura e comprimento do bico",
+       subtitle = "Dimensões de Adelie, Chinstrap, e Gentoo Penguins",
+       x = "Largura do bico (mm)", y = "Comprimento do bico (mm)",
+       colour = "Espécies")
+```
+
+```
+## Warning: Removed 2 rows containing missing values (geom_point).
+```
+]
+]
+
+---
+
+class: middle
+
+# Codificação em voz alta
+
+---
+
+.midi[
+&gt; **Comece com o data frame `penguins`**
+]
+
+.pull-left[
+
+```r
+*ggplot(data = penguins)
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-44-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.midi[
+&gt; Comece com o dataframe `penguins`,
+&gt; **atribua a largura do bico (bill depth) ao eixo x**
+]
+
+.pull-left[
+
+```r
+ggplot(data = penguins,
+*      mapping = aes(x = bill_depth_mm))
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-45-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.midi[
+&gt; Comece com o dataframe `penguins`,
+&gt; atribua a largura do bico (bill depth) ao eixo x
+&gt; **e atribua o comprimento do bico (bill length) ao eixo y**
+]
+
+.pull-left[
+
+```r
+ggplot(data = penguins,
+       mapping = aes(x = bill_depth_mm,
+*                    y = bill_length_mm))
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-46-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.midi[
+&gt; Comece com o dataframe `penguins`,
+&gt; atribua a largura do bico (bill depth) ao eixo x
+&gt; e atribua o comprimento do bico (bill length) ao eixo y.
+&gt; **Represente cada observação com um ponto**
+]
+
+.pull-left[
+
+```r
+ggplot(data = penguins,
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm)) + 
+* geom_point()
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-47-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.midi[
+&gt; Comece com o dataframe `penguins`,
+&gt; atribua a largura do bico (bill depth) ao eixo x
+&gt; e atribua o comprimento do bico (bill length) ao eixo y.
+&gt; Represente cada observação com um ponto
+&gt; **e mapeie as espécies para a cor de cada ponto.**
+]
+
+.pull-left[
+
+```r
+ggplot(data = penguins,
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+*                    colour = species)) +
+  geom_point()
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-48-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.midi[
+&gt; Comece com o dataframe `penguins`,
+&gt; atribua a largura do bico (bill depth) ao eixo x
+&gt; e atribua o comprimento do bico (bill length) ao eixo y.
+&gt; Represente cada observação com um ponto
+&gt; e mapeie as espécies para a cor de cada ponto
+&gt; **Título do gráfico "Largura e comprimento do bico"**
+]
+
+.pull-left[
+
+```r
+ggplot(data = penguins,
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     colour = species)) +
+  geom_point() +
+* labs(title = "Largura e comprimento do bico")
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-49-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.midi[
+&gt; Comece com o dataframe `penguins`,
+&gt; atribua a largura do bico (bill depth) ao eixo x
+&gt; e atribua o comprimento do bico (bill length) ao eixo y.
+&gt; Represente cada observação com um ponto
+&gt; e mapeie as espécies para a cor de cada ponto
+&gt; Título do gráfico "Largura e comprimento do bico"
+&gt; **e adicione o subtítulo "Dimensões para penguins Adelie, Chinstrap, e Gentoo"**
+]
+
+.pull-left[
+
+```r
+ggplot(data = penguins,
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     colour = species)) +
+  geom_point() +
+  labs(title = "Largura e comprimento do bico",
+*      subtitle = "Dimensões para penguins Adelie, Chinstrap, e Gentoo")
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-50-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.midi[
+&gt; Comece com o dataframe `penguins`,
+&gt; atribua a largura do bico (bill depth) ao eixo x
+&gt; e atribua o comprimento do bico (bill length) ao eixo y.
+&gt; Represente cada observação com um ponto
+&gt; e mapeie as espécies para a cor de cada ponto
+&gt; Título do gráfico "Largura e comprimento do bico",
+&gt; e adicione o subtítulo "Dimensões para penguins Adelie, Chinstrap, e Gentoo", 
+&gt; **rotule os eixos x e y como "Largura do bico (mm)" and "Comprimento do bico (mm)", respectivamente**
+]
+
+.pull-left[
+
+```r
+ggplot(data = penguins,
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     colour = species)) +
+  geom_point() +
+  labs(title = "Largura e comprimento do bico",
+       subtitle = "Dimensões para penguins Adelie, Chinstrap, e Gentoo",
+*      x = "Largura do bico (mm)", y = "Comprimento do bico (mm)")
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-51-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.midi[
+&gt; Comece com o dataframe `penguins`,
+&gt; atribua a largura do bico (bill depth) ao eixo x
+&gt; e atribua o comprimento do bico (bill length) ao eixo y.
+&gt; Represente cada observação com um ponto
+&gt; e mapeie as espécies para a cor de cada ponto
+&gt; Título do gráfico "Largura e comprimento do bico",
+&gt; e adicione o subtítulo "Dimensões para penguins Adelie, Chinstrap, e Gentoo", 
+&gt; rotule os eixos x e y como "Largura do bico (mm)" and "Comprimento do bico (mm)", respectivamente,
+&gt; **rotule a legenda "Espécies"**
+]
+
+.pull-left[
+
+```r
+ggplot(data = penguins,
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     colour = species)) +
+  geom_point() +
+  labs(title = "Largura e comprimento do bico",
+       subtitle = "Dimensões para penguins Adelie, Chinstrap, e Gentoo",
+       x = "Largura do bico (mm)", y = "Comprimento do bico (mm)",
+*      colour = "Espécies")
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-52-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.midi[
+&gt; Comece com o dataframe `penguins`,
+&gt; atribua a largura do bico (bill depth) ao eixo x
+&gt; e atribua o comprimento do bico (bill length) ao eixo y.
+&gt; Represente cada observação com um ponto
+&gt; e mapeie as espécies para a cor de cada ponto
+&gt; Título do gráfico "Largura e comprimento do bico",
+&gt; e adicione o subtítulo "Dimensões para penguins Adelie, Chinstrap, e Gentoo", 
+&gt; rotule os eixos x e y como "Largura do bico (mm)" and "Comprimento do bico (mm)", respectivamente,
+&gt; rotule a legenda "Espécies" 
+&gt; **e adicione uma legenda para os dados.**
+]
+
+.pull-left[
+
+```r
+ggplot(data = penguins,
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     colour = species)) +
+  geom_point() +
+  labs(title = "Largura e comprimento do bico",
+       subtitle = "Dimensões para penguins Adelie, Chinstrap, e Gentoo",
+       x = "Largura do bico (mm)", y = "Comprimento do bico (mm)",
+       colour = "Espécies",
+*      caption = "Dados: Palmer Station LTER / palmerpenguins package")
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-53-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.midi[
+&gt; Comece com o dataframe `penguins`,
+&gt; atribua a largura do bico (bill depth) ao eixo x
+&gt; e atribua o comprimento do bico (bill length) ao eixo y.
+&gt; Represente cada observação com um ponto
+&gt; e mapeie as espécies para a cor de cada ponto
+&gt; Título do gráfico "Largura e comprimento do bico",
+&gt; e adicione o subtítulo "Dimensões para penguins Adelie, Chinstrap, e Gentoo", 
+&gt; rotule os eixos x e y como "Largura do bico (mm)" and "Comprimento do bico (mm)", respectivamente,
+&gt; rotule a legenda "Espécies" 
+&gt; e adicione uma legenda para os dados.
+&gt; **Finalmente, utilize uma escala de cores discreta para leitores com algum tipo de daltonismo.**
+]
+
+.pull-left[
+
+```r
+ggplot(data = penguins,
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     colour = species)) +
+  geom_point() +
+  labs(title = "Largura e comprimento do bico",
+       subtitle = "Dimensões para penguins Adelie, Chinstrap, e Gentoo",
+       x = "Largura do bico (mm)", y = "Comprimento do bico (mm)",
+       colour = "Espécies",
+       caption = "Dados: Palmer Station LTER / palmerpenguins package") +
+* scale_colour_viridis_d()
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-54-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.panelset[
+.panel[.panel-name[Plot]
+&lt;img src="index_files/figure-html/unnamed-chunk-55-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[Code]
+
+
+```r
+ggplot(data = penguins,
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     colour = species)) +
+  geom_point() +
+  labs(title = "Largura e comprimento do bico",
+       subtitle = "Dimensões para penguins Adelie, Chinstrap, e Gentoo",
+       x = "Largura do bico (mm)", y = "Comprimento do bico (mm)",
+       colour = "Espécies",
+       caption = "Dados: Palmer Station LTER / palmerpenguins package") +
+  scale_colour_viridis_d()
+```
+
+```
+## Warning: Removed 2 rows containing missing values (geom_point).
+```
+]
+
+.panel[.panel-name[Narrative]
+.midi[
+
+Comece com o dataframe `penguins`, atribua a largura do bico (bill depth) ao eixo x e atribua o comprimento do bico (bill length) ao eixo y.   
+Represente cada observação com um ponto e mapeie as espécies para a cor de cada ponto.    
+
+Título do gráfico "Largura e comprimento do bico", e adicione o subtítulo "Dimensões para penguins Adelie, Chinstrap, e Gentoo", rotule os eixos x e y como "Largura do bico (mm)" and "Comprimento do bico (mm)", respectivamente. 
+
+Rotule a legenda "Espécies" e adicione uma legenda para os dados.
+
+Finalmente, utilize uma escala de cores discreta para leitores com algum tipo de daltonismo.
+]
+]
+
+]
+
+---
+
+## Nomes dos argumentos
+
+.tip[
+Você pode omitir os nomes dos dois primeiros argumentos ao construir gráfico com `ggplot()`.
+]
+
+.pull-left[
+
+```r
+ggplot(data = penguins,
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     colour = species)) +
+  geom_point() +
+  scale_colour_viridis_d()
+```
+]
+.pull-right[
+
+```r
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+           colour = species)) +
+  geom_point() +
+  scale_colour_viridis_d()
+```
+]
+
+
+
+
+---
+
+class: middle
+
+# Aesthetics
+
+---
+
+## Opções de Aesthetics
+
+Parâmetros de gráficos que podem ser **especificados para uma variável** nos dado são
+
+- `colour`
+- `shape`
+- `size`
+- `alpha` (transparência)
+
+---
+
+## Cor
+
+.pull-left[
+
+```r
+ggplot(penguins,
+       aes(x = bill_depth_mm, 
+           y = bill_length_mm,
+*          colour = species)) +
+  geom_point() +
+  scale_colour_viridis_d()
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-56-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Forma
+
+Mapeado para uma variável diferente da **cor**.
+
+.pull-left[
+
+```r
+ggplot(penguins,
+       aes(x = bill_depth_mm, 
+           y = bill_length_mm,
+           colour = species,
+*          shape = island)) +
+  geom_point() +
+  scale_colour_viridis_d()
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-57-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Forma
+
+Mapeado para a mesma variável como **cor**.
+
+.pull-left[
+
+```r
+ggplot(penguins,
+       aes(x = bill_depth_mm, 
+           y = bill_length_mm,
+           colour = species,
+*          shape = species)) +
+  geom_point() +
+  scale_colour_viridis_d()
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-58-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Tamanho
+
+.pull-left[
+
+```r
+ggplot(penguins,
+       aes(x = bill_depth_mm, 
+           y = bill_length_mm,
+           colour = species,
+           shape = species,
+*          size = body_mass_g)) +
+  geom_point() +
+  scale_colour_viridis_d()
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-59-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Alpha
+
+.pull-left[
+
+```r
+ggplot(penguins,
+       aes(x = bill_depth_mm, 
+           y = bill_length_mm,
+           colour = species,
+           shape = species,
+           size = body_mass_g,
+*          alpha = flipper_length_mm)) +
+  geom_point() +
+  scale_colour_viridis_d()
+```
+]
+.pull-right[
+&lt;img src="index_files/figure-html/unnamed-chunk-60-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+.pull-left[
+**Mapping**
+
+
+```r
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm,
+*          size = body_mass_g,
+*          alpha = flipper_length_mm)) +
+  geom_point()
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-61-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+.pull-right[
+**Setting**
+
+
+```r
+ggplot(penguins,
+       aes(x = bill_depth_mm,
+           y = bill_length_mm)) + 
+* geom_point(size = 2, alpha = 0.5)
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-62-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Mapping vs. setting
+
+- **Mapping:** Determinar o tamanho, alfa, etc. dos pontos com base nos valores de uma variável nos dados
+  - vai para `aes()`
+
+- **Setting:** Determinar o tamanho, alfa, etc. dos pontos **não** com base nos valores de uma variável nos dados
+  - entra em `geom_*()` (isto foi `geom_point()` no exemplo anterior, mas aprenderemos sobre outros geoms em breve!)
+  
+---
+
+class: middle
+
+# Faceting
+
+---
+
+## Faceting
+
+- gráficos menores que exibem diferentes subconjuntos dos dados
+- Útil para explorar relações condicionais e grandes dados
+
+---
+
+.panelset[
+.panel[.panel-name[Plot]
+&lt;img src="index_files/figure-html/unnamed-chunk-63-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+]
+.panel[.panel-name[Código]
+
+
+```r
+ggplot(penguins, aes(x = bill_depth_mm, y = bill_length_mm)) + 
+  geom_point() +
+* facet_grid(species ~ island)
+```
+
+```
+## Warning: Removed 2 rows containing missing values (geom_point).
+```
+]
+]
+
+---
+
+## Várias maneiras de fazer "facets"
+
+.question[
+Nos próximos slides, descreva o que cada gráfico apresenta. Pense em como o código se relaciona com a saída.
+
+**Nota:** Os gráficos nos próximos slides não têm títulos, rótulos de eixos, etc., porque queremos que você descubra o que está acontecendo nos gráficos. Mas você deve sempre rotular!
+]
+
+---
+
+
+```r
+ggplot(penguins, aes(x = bill_depth_mm, y = bill_length_mm)) + 
+  geom_point() +
+* facet_grid(species ~ sex)
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-64-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggplot(penguins, aes(x = bill_depth_mm, y = bill_length_mm)) + 
+  geom_point() +
+* facet_grid(sex ~ species)
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-65-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggplot(penguins, aes(x = bill_depth_mm, y = bill_length_mm)) + 
+  geom_point() +
+* facet_wrap(~ species)
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-66-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggplot(penguins, aes(x = bill_depth_mm, y = bill_length_mm)) + 
+  geom_point() +
+* facet_grid(. ~ species)
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-67-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggplot(penguins, aes(x = bill_depth_mm, y = bill_length_mm)) + 
+  geom_point() +
+* facet_wrap(~ species, ncol = 2)
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-68-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Resumo Faceting 
+
+- `facet_grid()`:
+    - Grid em duas dimensões
+    - `rows ~ cols`
+    - use `.` para não separar
+- `facet_wrap()`: Representação em uma dimensão de acordo com o número de linhas e colunas especificadas ou com a área de plotagem disponível
+
+---
+
+## Facet e cores
+
+.pull-left-narrow[
+
+```r
+ggplot(
+  penguins, 
+  aes(x = bill_depth_mm, 
+      y = bill_length_mm, 
+*     color = species)) +
+  geom_point() +
+  facet_grid(species ~ sex) +
+* scale_color_viridis_d()
+```
+]
+.pull-right-wide[
+&lt;img src="index_files/figure-html/unnamed-chunk-69-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+## Facet e cor, sem legenda
+
+.pull-left-narrow[
+
+```r
+ggplot(
+  penguins, 
+  aes(x = bill_depth_mm, 
+      y = bill_length_mm, 
+      color = species)) +
+  geom_point() +
+  facet_grid(species ~ sex) +
+  scale_color_viridis_d() +
+* guides(color = FALSE)
+```
+]
+.pull-right-wide[
+&lt;img src="index_files/figure-html/unnamed-chunk-70-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+class: middle
+
+# Visualização de dados - agora é com vocês!
+
+
+
+<div class="countdown" id="timer_d01cdf2e" data-update-every="1" data-play-sound="true" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
+<code class="countdown-time"><span class="countdown-digits minutes">20</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+---
+class: middle, inverse
+
+# Como abrir arquivos .csv e .xlsx no R
+
+
+---
+
+# Principais comandos 
+
+
+```r
+getwd()
+```
+
+```
+## [1] "D:/OneDrive - cefetmg.br/01_disciplinas/2022_2/introR/01_aulas/2022/class02"
+```
+
+
+```r
+setwd("C:\\User\\Documents")
+```
+
+
+```r
+library(tidyverse)
+dados &lt;- read_csv(file1)
+```
+
+
+```r
+library(readxl)
+transporte &lt;- read_excel(arquivo, "Variáveis externas")
+```
+
+
+
+---
+class: middle
+
+# Atividades em classe
+
+
+
+
+<div class="countdown" id="timer_643e7e40" data-update-every="1" data-play-sound="true" tabindex="0" style="right:0;bottom:0;">
+<div class="countdown-controls"><button class="countdown-bump-down">&minus;</button><button class="countdown-bump-up">&plus;</button></div>
+<code class="countdown-time"><span class="countdown-digits minutes">20</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+---
+# Atividades
+
+1. Xaringan e Xaringan Themer
+2. Atividade 3 e Tutoriais 1 e 2 
+
+---
+class: inverse, center, middle
+
+# DÚVIDAS?
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightLines": true,
+"highlightStyle": "solarized-light",
+"countIncrementalSlides": false,
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
